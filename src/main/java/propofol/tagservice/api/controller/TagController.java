@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import propofol.tagservice.api.controller.dto.ResponseDto;
 import propofol.tagservice.api.controller.dto.TagResponse;
 import propofol.tagservice.api.controller.dto.TagePageResponse;
 import propofol.tagservice.api.controller.dto.TageSliceResponse;
@@ -28,21 +27,23 @@ public class TagController {
      * 페이지 단위 태그 조회
      */
     @GetMapping
-    public TagePageResponse getPageTags(@RequestParam("page") Integer page){
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto getPageTags(@RequestParam("page") Integer page){
         Page<Tag> pageTags = tagService.getPageTags(page);
-        return createTagPageResponse(pageTags);
-
+        return new ResponseDto<>(HttpStatus.OK.value(), "success",
+                "태그 조회 성공!", createTagPageResponse(pageTags));
     }
 
     /**
      * 태그 keyPoint 조회
      */
     @GetMapping("/slice")
-    public TageSliceResponse getSliceTags(@RequestParam("keypoint") String keypoint,
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto getSliceTags(@RequestParam("keypoint") String keypoint,
                                           @RequestParam("page") Integer page){
         Slice<Tag> sliceTage = tagService.getSliceTage(keypoint.toUpperCase(Locale.ROOT), page);
-        return createSliceTags(sliceTage);
-
+        return new ResponseDto<>(HttpStatus.OK.value(), "success",
+                "태그 조회 성공!", createSliceTags(sliceTage));
     }
 
     private TageSliceResponse createSliceTags(Slice<Tag> sliceTage) {

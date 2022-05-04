@@ -2,8 +2,10 @@ package propofol.tagservice.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import propofol.tagservice.api.controller.dto.ResponseDto;
 import propofol.tagservice.api.controller.dto.TagRequestDto;
 import propofol.tagservice.domain.tag.entity.Tag;
 import propofol.tagservice.domain.tag.service.TagService;
@@ -20,26 +22,32 @@ public class TagAdminController {
      * 태그 생성
      */
     @PostMapping
-    public String saveTag(@Validated @RequestBody TagRequestDto requestDto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseDto saveTag(@Validated @RequestBody TagRequestDto requestDto){
         Tag tag = Tag.createTag().name(requestDto.getName()).build();
-        return tagService.saveTag(tag);
+        return new ResponseDto<>(HttpStatus.CREATED.value(), "success",
+                "태그 생성 성공!", tagService.saveTag(tag));
     }
 
     /**
      * 태그 삭제
      */
     @DeleteMapping("/{tagName}")
-    public String deleteTag(@PathVariable(value = "tagName") String tagName){
-        return tagService.deleteTag(tagName);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto deleteTag(@PathVariable(value = "tagName") String tagName){
+        return new ResponseDto<>(HttpStatus.OK.value(), "success",
+                "태그 삭제 성공!", tagService.deleteTag(tagName));
     }
 
     /**
      * 태그 수정
      */
     @PostMapping("/{tagName}")
-    public String updateTag(@PathVariable(value = "tagName") String tagName,
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDto updateTag(@PathVariable(value = "tagName") String tagName,
                             @Validated @RequestBody TagRequestDto requestDto){
-        return tagService.updateTag(tagName, requestDto.getName());
+        return new ResponseDto<>(HttpStatus.OK.value(), "success",
+                "태그 수정 성공!", tagService.updateTag(tagName, requestDto.getName()));
     }
 
 }
