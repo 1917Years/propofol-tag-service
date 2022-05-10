@@ -26,4 +26,4 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://ec2-15-164-164-245.ap-northeast-2.compute.amazonaws.com:8761
+      defaultZone: http://ec2-15-164-164-245.ap-northeast-2.compute.amazonaws.com:8761/eureka
