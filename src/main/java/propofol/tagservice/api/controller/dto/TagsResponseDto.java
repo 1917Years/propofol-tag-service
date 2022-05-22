@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class TageSliceResponse {
-    private Boolean hasNext;
-    private Integer nowPageNumber;
+public class TagsResponseDto {
     private List<TagResponseDto> tags = new ArrayList<>();
 }

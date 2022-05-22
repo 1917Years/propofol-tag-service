@@ -11,8 +11,12 @@ import propofol.tagservice.domain.exception.NotFoundTagException;
 import propofol.tagservice.domain.tag.entity.Tag;
 import propofol.tagservice.domain.tag.repository.TagRepository;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TagService {
     private final TagRepository tagRepository;
 
@@ -21,14 +25,16 @@ public class TagService {
         return  "ok";
     }
 
-    public Page<Tag> getPageTags(Integer page) {
+    public Page<Tag> getPageTags(int page, String keypoint) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.ASC, "id"));
-        return tagRepository.findPageTags(pageRequest);
+
+        if(keypoint == null) return tagRepository.findPageTags(pageRequest);
+        else return tagRepository.findPageTagsByKeypoint(pageRequest, keypoint);
     }
 
-    public Slice<Tag> getSliceTage(String keypoint, Integer page){
+    public Slice<Tag> getSliceTageByKeypoint(String keypoint, Integer page){
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.ASC, "id"));
-        return tagRepository.findSliceTags(pageRequest, keypoint);
+        return tagRepository.findSliceTagsByKeypoint(pageRequest, keypoint);
     }
 
     public String deleteTag(String tagName) {
@@ -49,5 +55,13 @@ public class TagService {
             throw new NotFoundTagException("태그를 찾을 수 없습니다.");
         });
         return tag;
+    }
+
+    public List<Tag> getTagsByIds(List<Long> ids) {
+        return tagRepository.findByIds(ids);
+    }
+
+    public List<Tag> getTagsByProjectBoardIds(Set<Long> ids) {
+        return tagRepository.findBySetIds(ids);
     }
 }
