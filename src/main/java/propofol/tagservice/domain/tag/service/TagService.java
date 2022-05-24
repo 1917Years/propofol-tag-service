@@ -57,7 +57,7 @@ public class TagService {
         return tag;
     }
 
-    public List<Tag> getTagsByIds(List<Long> ids) {
+    public List<Tag> getTagsByIds(Set<Long> ids) {
         return tagRepository.findByIds(ids);
     }
 

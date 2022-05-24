@@ -53,7 +53,7 @@ public class TagController {
      */
     @GetMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
-    public TagsResponseDto getTagsByNames(@RequestParam("ids") List<Long> ids){
+    public TagsResponseDto getTagsByNames(@RequestParam("ids") Set<Long> ids){
         TagsResponseDto responseDto = createTagsResponse(ids);
 
         return responseDto;
@@ -92,7 +92,7 @@ public class TagController {
         return tagePageResponse;
     }
 
-    private TagsResponseDto createTagsResponse(List<Long> ids) {
+    private TagsResponseDto createTagsResponse(Set<Long> ids) {
         TagsResponseDto responseDto = new TagsResponseDto();
         List<TagResponseDto> responseList = responseDto.getTags();
         List<Tag> tags = tagService.getTagsByIds(ids);
